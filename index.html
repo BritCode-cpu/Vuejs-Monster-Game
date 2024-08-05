@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Monster Slayer</h1>
+    </header>
+
+
+    <div id="game">
+
+        <!--Players Monster bar-->
+      <section id="monster" class="container">
+        <h2>Monster Health</h2>
+        <div class="healthbar">
+          <div class="healthbar__value" :style="monsterHealthLevels"></div>
+        </div>
+      </section>
+
+      <!--Players health bar-->
+      <section id="player" class="container">
+        <h2>Your Health</h2>
+        <div class="healthbar">
+          <div class="healthbar__value" :style="playerHealthLevels"></div>
+        </div>
+      </section>
+
+    <!--Closing screen renders the end results of the match. If player won, lost, or a draw a popup of the results will appears due to 'V-if'-->
+      <section class="container" v-if="winner">
+        <h2>Game Over!</h2>
+        <h3 v-if="winner === 'monster'">You Lost!</h3>
+        <h3 v-else-if="winner === 'you'">You Won!</h3>
+        <h3 v-else>It's a Draw!</h3>
+        <button @click="resetGame">Start New Game</button>
+      </section>
+     <!--Controls to fight, heal, do speacial attack, or surrender-->
+      <section id="controls" v-else>
+        <button @click="attackMonster">ATTACK</button>
+        <button :disabled="activateSpecialAttack" @click="specialAttack">SPECIAL ATTACK</button>
+        <button @click="healPlayer" >HEAL</button>
+        <button @click="surrender">SURRENDER</button>
+        <button @click="resetGame">Start New Game</button>
+      </section>
+
+      <!--The section for Outputting battle log as an unordered list that displays healing, attack from monster, and attack-->
+      <section id="log" class="container">
+        <h2>Battle Log</h2>
+        <ul>
+         <!---->
+        <li v-for="log in logs">
+          
+          <span :class="{'log--player': log.actionBy === 'you', 'log--monster': log.actionBy === 'monster'}">{{log.actionBy === 'you' ? 'you':'monster' }}</span>
+          <span v-if="log.actionType ==='heal'"> heal yourself for <span class="log--heal">{{log.actionValue}}</span></span>
+          <span v-esle> attacks and deals<span class="log--damage"> {{log.actionValue}}</span></span>
+        </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
